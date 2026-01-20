@@ -1,0 +1,27 @@
+{
+  "paths": {
+    "operations_xlsx": "C:/CAMINHO/Operacoes_Para_Auditar.xlsx",
+    "professionals_xlsx": "C:/CAMINHO/Base_Profissionais.xlsx",
+    "history_xlsx": "C:/CAMINHO/Historico_Auditoria.xlsx",
+    "history_sheet": "Auditoria De Estruturadas"
+  },
+  "outlook": {
+    "send_delay_seconds": 3,
+    "search_sent_max_items": 300,
+    "inbox_scan_max_items": 5000
+  },
+  "dispatch": {
+    "status_sent_label": "Enviado",
+    "email_subject_template": "Análise de Alocação em Operações Estruturadas – Cliente {nome_cliente} – {cod_cliente}"
+  },
+  "followup": {
+    "month_reference": "2026-01",
+    "require_external_sender": false,
+    "reminder_message": "Prezado(a),\n\nAté o momento não identificamos retorno referente à solicitação de auditoria enviada anteriormente sobre a operação estruturada do cliente {nome_cliente}.\n\nSolicitamos, por gentileza, o retorno.\n\nAtenciosamente,\nEquipe de Auditoria (Sanitized)\n",
+    "mark_replied_label": "Respondido",
+    "mark_reminded_label": "Sem Retorno – Cobrado Novamente"
+  },
+  "run_mode": {
+    "display_only_default": false
+  }
+}
