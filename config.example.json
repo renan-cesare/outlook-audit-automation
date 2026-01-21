@@ -3,7 +3,8 @@
     "operations_xlsx": "C:/CAMINHO/Operacoes_Para_Auditar.xlsx",
     "professionals_xlsx": "C:/CAMINHO/Base_Profissionais.xlsx",
     "history_xlsx": "C:/CAMINHO/Historico_Auditoria.xlsx",
-    "history_sheet": "Auditoria De Estruturadas"
+    "history_sheet": "Auditoria De Estruturadas",
+    "email_body_html": "templates/email_body.html"
   },
   "outlook": {
     "send_delay_seconds": 3,
