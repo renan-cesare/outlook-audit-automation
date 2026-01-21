@@ -22,12 +22,31 @@ class OutlookClient:
     def create_mail(self):
         return self.outlook.CreateItem(0)
 
-    def send_mail(self, to: str, cc: str, subject: str, body: str, display_only: bool = False) -> None:
+    def send_mail(
+        self,
+        to: str,
+        cc: str,
+        subject: str,
+        body: str,
+        display_only: bool = False,
+        is_html: bool = False,
+    ) -> None:
         mail = self.create_mail()
-        mail.To = to
-        mail.CC = cc
-        mail.Subject = subject
-        mail.Body = body
+        mail.To = to or ""
+        mail.CC = cc or ""
+        mail.Subject = subject or ""
+
+        if is_html:
+            mail.HTMLBody = body
+        else:
+            mail.Body = body
+
+        # salva antes (ajuda a estabilizar IDs e reduzir casos “fantasma”)
+        try:
+            mail.Save()
+        except Exception:
+            pass
+
         if display_only:
             mail.Display()
         else:
@@ -58,8 +77,15 @@ class OutlookClient:
             count += 1
             if count > max_items:
                 break
+
             try:
-                if getattr(item, "Subject", "") == subject and token in getattr(item, "Body", ""):
+                if getattr(item, "Subject", "") != subject:
+                    continue
+
+                body_text = getattr(item, "Body", "") or ""
+                html_text = getattr(item, "HTMLBody", "") or ""
+
+                if (token in body_text) or (token in html_text):
                     conversation_id = getattr(item, "ConversationID", "") or ""
                     internet_id = getattr(item, "InternetMessageID", "") or ""
                     entry_id = getattr(item, "EntryID", "") or ""
