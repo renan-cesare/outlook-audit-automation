@@ -1,82 +1,72 @@
+# Outlook Structured Operations Audit Automation
 
-Outlook Structured Operations Audit Automation
+> Projeto profissional **sanitizado** de automação de auditoria operacional, utilizado em contexto real de backoffice / risco & compliance.
 
-Projeto profissional sanitizado de automação de auditoria operacional, utilizado em contexto real de backoffice / risco & compliance.
+---
 
-📌 Contexto
+## 📌 Contexto
 
 Em ambientes corporativos do mercado financeiro, diversas operações precisam passar por processos formais de auditoria interna, incluindo:
 
-Contato com assessores responsáveis
+* Contato com assessores responsáveis
+* Coleta de justificativas formais
+* Registro de evidências
+* Acompanhamento de respostas
+* Reenvio de cobranças quando não há retorno
 
-Coleta de justificativas formais
+Este projeto automatiza todo esse ciclo de forma integrada ao **Microsoft Outlook** e **planilhas Excel**.
 
-Registro de evidências
+> ⚠️ Este repositório contém uma versão **sanitizada**:
+>
+> * Sem nomes reais
+> * Sem e-mails reais
+> * Sem dados internos
+> * Sem estruturas proprietárias
+>
+> Mas preserva integralmente a **lógica real do processo**.
 
-Acompanhamento de respostas
+---
 
-Reenvio de cobranças quando não há retorno
+## 🚀 O que o sistema faz
 
-Este projeto automatiza todo esse ciclo de forma integrada ao Microsoft Outlook e planilhas Excel.
+### 1) Módulo de Envio (`dispatch`)
 
-⚠️ Este repositório contém uma versão sanitizada:
+* Lê planilha Excel de operações a serem auditadas
+* Lê base de dados de profissionais (assessores / líderes)
+* Gera e envia e-mails automaticamente via Outlook
+* Insere um **token único** no corpo do e-mail para rastreio
+* Localiza o e-mail enviado na pasta **Itens Enviados**
+* Captura e salva:
 
-Sem nomes reais
+  * `ConversationID`
+  * `InternetMessageID`
+  * `EntryID`
+* Registra tudo em uma planilha de **histórico**
 
-Sem e-mails reais
+### 2) Módulo de Acompanhamento (`followup`)
 
-Sem dados internos
+* Lê a planilha de histórico
 
-Sem estruturas proprietárias
+* Para cada envio:
 
-Mas preserva integralmente a lógica real do processo.
+  * Localiza o e-mail original pelo `EntryID`
+  * Busca respostas na caixa de entrada via `ConversationID`
 
-🚀 O que o sistema faz
-1) Módulo de Envio (dispatch)
+* Se encontrou resposta:
 
-Lê planilha Excel de operações a serem auditadas
+  * Marca como **Respondido**
+  * Salva data e conteúdo da resposta
 
-Lê base de dados de profissionais (assessores / líderes)
+* Se **não** encontrou:
 
-Gera e envia e-mails automaticamente via Outlook
+  * Gera automaticamente uma **cobrança (reply)**
+  * Atualiza o status no histórico
 
-Insere um token único no corpo do e-mail para rastreio
+---
 
-Localiza o e-mail enviado na pasta Itens Enviados
+## 🧱 Estrutura do Projeto
 
-Captura e salva:
-
-ConversationID
-
-InternetMessageID
-
-EntryID
-
-Registra tudo em uma planilha de histórico
-
-2) Módulo de Acompanhamento (followup)
-
-Lê a planilha de histórico
-
-Para cada envio:
-
-Localiza o e-mail original pelo EntryID
-
-Busca respostas na caixa de entrada via ConversationID
-
-Se encontrou resposta:
-
-Marca como Respondido
-
-Salva data e conteúdo da resposta
-
-Se não encontrou:
-
-Gera automaticamente uma cobrança (reply)
-
-Atualiza o status no histórico
-
-🧱 Estrutura do Projeto
+```text
 outlook-structured-operations-audit-automation/
 │
 ├── main.py
@@ -99,71 +89,93 @@ outlook-structured-operations-audit-automation/
         ├── outlook_client.py
         ├── logging_utils.py
         └── file_lock.py
-⚙️ Configuração
+```
 
-Clone o repositório
+---
 
-Crie um arquivo:
+## ⚙️ Configuração
 
+1. Clone o repositório
+2. Crie um arquivo:
+
+```text
 config.json
+```
 
 Baseando-se em:
 
+```text
 config.example.json
+```
 
-Ajuste os caminhos das planilhas e parâmetros conforme seu ambiente.
+3. Ajuste os caminhos das planilhas e parâmetros conforme seu ambiente.
 
-⚠️ O arquivo config.json não deve ser versionado (já está no .gitignore).
+> ⚠️ O arquivo `config.json` **não deve ser versionado** (já está no `.gitignore`).
 
-▶️ Como rodar
-Instalar dependências
+---
+
+## ▶️ Como rodar
+
+### Instalar dependências
+
+```bash
 pip install -r requirements.txt
-Teste seguro (não envia e-mail)
+```
+
+### Teste seguro (não envia e-mail)
+
+```bash
 python main.py dispatch --dry-run
-Mostrar e-mails antes de enviar
+```
+
+### Mostrar e-mails antes de enviar
+
+```bash
 python main.py dispatch --display-only
-Rodar acompanhamento (follow-up)
+```
+
+### Rodar acompanhamento (follow-up)
+
+```bash
 python main.py followup --display-only
-🛡️ Segurança e Confiabilidade
+```
+
+---
+
+## 🛡️ Segurança e Confiabilidade
 
 O projeto:
 
-Bloqueia planilhas abertas em uso
+* Bloqueia planilhas abertas em uso
+* Nunca sobrescreve histórico manualmente
+* Usa **tokens únicos por envio**
+* O `.gitignore` impede subir:
 
-Nunca sobrescreve histórico manualmente
+  * `config.json` real
+  * planilhas reais
+  * logs
 
-Usa tokens únicos por envio
+---
 
-O .gitignore impede subir:
+## 🧠 O que este projeto demonstra tecnicamente
 
-config.json real
+* Automação corporativa real
+* Integração com Outlook via COM (pywin32)
+* Controle de estado e histórico
+* Idempotência e rastreabilidade
+* Arquitetura modular
+* Separação de responsabilidades
+* Processamento de Excel com pandas
+* Padrões de projeto aplicados a backoffice / compliance
 
-planilhas reais
+---
 
-logs
+## 📎 Observação importante
 
-🧠 O que este projeto demonstra tecnicamente
+> Este projeto **não é um script de estudo**. Ele é a formalização sanitizada de uma automação real de produção usada em ambiente corporativo.
 
-Automação corporativa real
+---
 
-Integração com Outlook via COM (pywin32)
-
-Controle de estado e histórico
-
-Idempotência e rastreabilidade
-
-Arquitetura modular
-
-Separação de responsabilidades
-
-Processamento de Excel com pandas
-
-Padrões de projeto aplicados a backoffice / compliance
-
-📎 Observação importante
-
-Este projeto não é um script de estudo. Ele é a formalização sanitizada de uma automação real de produção usada em ambiente corporativo.
-
-📄 Licença
+## 📄 Licença
 
 MIT License
